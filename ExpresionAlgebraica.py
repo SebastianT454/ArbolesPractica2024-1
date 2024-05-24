@@ -47,16 +47,26 @@ class ExpresionAlgebraica:
         if not self.expresion:
             raise Exception(f"No hay expresión!")
         
-        lista_terminos = []
+        elementos = []
+        elemento_actual = ''
+        
+        for caracter in self.expresion:
+            if caracter == ' ':
+                continue
 
-        for termino in self.expresion:
-            if termino != " ":
-                if termino not in terminos_validos and termino.isdigit() == False:
-                    print(termino)
-                    raise Exception(f"Hay un termino que no es un operador o un numero!")
-                lista_terminos.append(termino)
+            elif caracter in terminos_validos:
+                if elemento_actual:
+                    elementos.append(elemento_actual)
+                    elemento_actual = ''
+                elementos.append(caracter)
 
-        self.lista_terminos = lista_terminos
+            elif caracter.isdigit():
+                elemento_actual += caracter
+        
+        if elemento_actual:
+            elementos.append(elemento_actual)
+        
+        self.lista_terminos = elementos
     
     def operadoresValidos(self, operadores = ["*", "/", "+","-"]):
         for operador in operadores:
@@ -109,8 +119,7 @@ class ExpresionAlgebraica:
         return contador
 
     def verificarLadoIzquierdoOperacion(self, lista_terminos_expresion, indx_operando, operadores_visitados, indices = 1, terminos_invalidos = ["*", "/", "+","-",")"]):
-        indice_actual = indices - indx_operando
-        print("indice: ", indice_actual, "valor indice: ", lista_terminos_expresion[indice_actual])
+        indice_actual = indx_operando - indices
 
         if indice_actual == 0 or indice_actual in operadores_visitados:
             return True
@@ -121,7 +130,7 @@ class ExpresionAlgebraica:
         return self.verificarLadoIzquierdoOperacion(lista_terminos_expresion, indx_operando, operadores_visitados, indices + 1)
 
     def verificarLadoDerechoOperacion(self, lista_terminos_expresion, indx_operando, operadores_visitados, indices = 1, terminos_invalidos = ["*", "/", "+","-","("]):
-        indice_actual = indices + indx_operando
+        indice_actual = indx_operando + indices
 
         if indice_actual == len(lista_terminos_expresion)-1 or indice_actual in operadores_visitados:
             return True
@@ -143,13 +152,9 @@ class ExpresionAlgebraica:
                 for indx_termino in range(len(lista_terminos_expresion) - 1, -1, -1):
 
                     if lista_terminos_expresion[indx_termino] == operador and indx_termino not in indices_visitados:
-                        print(indices_totales_visitados, indx_termino)
 
                         termino_izquierdo_valido = self.verificarLadoIzquierdoOperacion(lista_terminos_expresion, indx_termino, indices_totales_visitados)
                         termino_derecho_valido = self.verificarLadoDerechoOperacion(lista_terminos_expresion, indx_termino, indices_totales_visitados)
-
-                        if indx_termino == 3:
-                            termino_izquierdo_valido = True
 
                         arbol.insert(arbol.root, indx_termino, lista_terminos_expresion[indx_termino])
                         indices_visitados.append(indx_termino)
@@ -171,12 +176,13 @@ class ExpresionAlgebraica:
             parentesis_terminos = parentesis[0]
             parentesis_indices = parentesis[1]
 
-
+"""
 # Ejemplo de uso
-cadena = "5 + 4 * 3 / 4 + 2"
+cadena = "(10 / 2) + 32 - 12 - (900 + 8)"
 Expresion = ExpresionAlgebraica(cadena)
 print(Expresion.esValidaExpresion())
 print(Expresion.lista_terminos)
 Arbol = Expresion.construirExpresion(Expresion.lista_terminos)
 Arbol.print(Arbol.root)
 print(Arbol.evaluate(Arbol.root))
+"""
