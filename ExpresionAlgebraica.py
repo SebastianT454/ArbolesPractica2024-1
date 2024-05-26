@@ -176,13 +176,51 @@ class ExpresionAlgebraica:
             parentesis_terminos = parentesis[0]
             parentesis_indices = parentesis[1]
 
-"""
+
 # Ejemplo de uso
-cadena = "(10 / 2) + 32 - 12 - (900 + 8)"
+cadena = "5+2-30*16*2"
 Expresion = ExpresionAlgebraica(cadena)
 print(Expresion.esValidaExpresion())
 print(Expresion.lista_terminos)
+
 Arbol = Expresion.construirExpresion(Expresion.lista_terminos)
 Arbol.print(Arbol.root)
 print(Arbol.evaluate(Arbol.root))
-"""
+
+import random
+
+def eliminarParentesisExpresion(lista_terminos):
+        indx_apertura_parentesis = []
+
+        for indx_termino in range(len(lista_terminos)):
+            if lista_terminos[indx_termino] == "(":
+                indx_apertura_parentesis.append(indx_termino)
+
+        parentesis_terminos = []
+        parentesis_analizados = []
+        
+        resultados_parentesis = []
+            
+        for indx_termino in range(len(lista_terminos)):
+            
+            if lista_terminos[indx_termino] == ")" and indx_termino not in parentesis_analizados:
+                parentesis_analizados.append(indx_termino)
+                parentesis_analizados.append(indx_apertura_parentesis[-1])
+                
+                for indx_termino_parentesis in range(indx_apertura_parentesis[-1] + 1, indx_termino):
+                    if indx_termino_parentesis not in parentesis_analizados:
+                        
+                        parentesis_terminos.append(lista_terminos[indx_termino_parentesis])
+                            
+                        parentesis_analizados.append(indx_termino_parentesis)
+                    
+                if parentesis_terminos:
+                    resultado = random.randint(0,9)
+                    resultados_parentesis.append(resultado)
+                    
+                print(parentesis_terminos)
+                del indx_apertura_parentesis[-1]
+                parentesis_terminos = []
+                
+                        
+eliminarParentesisExpresion(['(', '2', '+', '(','(', '900', '+', '8', ')',')', '-', '10', '/', '2', ')', '+', '32'])
