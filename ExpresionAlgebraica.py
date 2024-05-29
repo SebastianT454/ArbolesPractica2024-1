@@ -32,13 +32,13 @@ class ExpresionAlgebraica:
             if caracter == ' ':
                 continue
 
-            elif caracter in terminos_validos:
+            if caracter in terminos_validos:
                 if elemento_actual:
                     elementos.append(elemento_actual)
                     elemento_actual = ''
                 elementos.append(caracter)
 
-            elif caracter.isdigit() or caracter is ".":
+            if caracter.isdigit() or caracter == ".":
                 elemento_actual += caracter
         
         if elemento_actual:
