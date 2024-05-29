@@ -21,23 +21,36 @@ def crear_expresion():
   if not Expresion_valida:
     return
 
-  print(Operacion_actual.Expresion.lista_terminos)
+  Operacion_actual.Expresion.construirExpresion()
 
-  ArbolGenerado = Operacion_actual.Expresion.construirExpresion(Operacion_actual.Expresion.lista_terminos)
+  #-------------------------------------------------------
 
-  Operacion_actual.Arbol = ArbolGenerado
+  if not Operacion_actual.Expresion.resultado:
+
+    ArbolGenerado = Operacion_actual.Expresion.construirArbolExpresion()
+    Operacion_actual.Arbol = ArbolGenerado
 
 def visualizar_arbol_expresiones():
-  if not Operacion_actual.Arbol:
+  if Operacion_actual.Arbol is None and Operacion_actual.Expresion.resultado:
+    print("El arbol ya fue evaluado, no hay arbol!")
+    return
+  
+  if Operacion_actual.Arbol is None:
     print("El arbol no existe aùn, grave!")
+    return
 
   Operacion_actual.Arbol.print(Operacion_actual.Arbol.root)
 
 def evaluar_arbol_expresiones():
-  if Operacion_actual.Arbol.root is None or not Operacion_actual.Arbol:
+  if Operacion_actual.Arbol is None and Operacion_actual.Expresion.resultado:
+    print(f"El resultado de la operacion del arbol fue: {Operacion_actual.Expresion.resultado}")
+    return
+  
+  if Operacion_actual.Arbol is None:
     print("No hay nada en el Arbol o no existe!")
+    return
 
-  print(f"El resultado de la operacion del arbol fue: {Operacion_actual.Arbol.evaluate(Operacion_actual.Arbol.root)}")
+  print(f"El resultado de la operacion del arbol fue: { Operacion_actual.Arbol.evaluate(Operacion_actual.Arbol.root) }")
 
 while True:
   print("\nMenú de Expresiones:")
